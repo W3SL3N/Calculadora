@@ -8,6 +8,9 @@ class Root(Calculos):
     def __init__(self):
         super().__init__()
         self.root = Tk()
+
+        self.root.withdraw()  # Oculta a janela temporariamente.
+
         self.cria_tela()
         self.entry_numeros = None
         self.fonte_entry = None
@@ -17,12 +20,16 @@ class Root(Calculos):
         self.frame_operacoes = None
         self.cria_frames()
         self.cria_widgets()
+
+        self.root.deiconify()  # Exibe a janela após os métodos anteriores serem executados.
+
         self.root.mainloop()
 
     def cria_tela(self):
         """
         Definição da janela
         """
+
         largura, altura = 304, 433
 
         ws = self.root.winfo_screenwidth()
@@ -32,14 +39,13 @@ class Root(Calculos):
         y = (hs / 2) - (altura / 2)
 
         self.root.geometry('%dx%d+%d+%d' % (largura, altura, x, y))
-        self.root.configure(background='#202020')
         self.root.title('Calculadora')
         self.root.iconbitmap("icon\icone.ico")
 
+        self.root.configure(background='#202020')
         self.root.resizable(False, False)
 
         # Faz a topbar seguir o tema de cores do windows.
-        self.root.update()
         set_window_attribute = windll.dwmapi.DwmSetWindowAttribute
         get_parent = windll.user32.GetParent
         hwnd = get_parent(self.root.winfo_id())
