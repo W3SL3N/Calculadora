@@ -61,25 +61,25 @@ class Calculos:
             self.converte_ponto_para_virgula()
             return self.resultado
 
-    def faz_op_potencia(self, valor=None):
+    def faz_op_potencia(self, numero=None):
         """
         Retorna a potência quadrada do número pedido.
         """
-        if valor is None:
+        if numero is None:
             potencia = eval(f'{self.numero2}**2')
             self.converte_ponto_para_virgula()
             return potencia
         else:
-            potencia = eval(f'{valor.replace(",", ".")}**2')
+            numero = self.converte_ponto_para_virgula(numero)
+            potencia = eval(f'{numero}**2')
             self.resultado = self.formata_resultado(potencia)
-            self.converte_ponto_para_virgula()
             return self.resultado
 
     def faz_op_porcentagem(self, numero):
         """
         Retorna a porcentagem do número recebido como parâmetro para a realização do cálculo escolhido.
         """
-        self.converte_virgula_para_ponto()
+        numero = self.converte_virgula_para_ponto(numero)
         conta = float(numero) / 100
         numero = str((conta * float(self.numero1.replace(self.numero1[-1], ''))))
         return self.formata_resultado(numero)
@@ -95,6 +95,7 @@ class Calculos:
             self.converte_ponto_para_virgula()
             return self.resultado
         else:
+            numero = self.converte_virgula_para_ponto(numero)
             conta = float(numero) ** 0.5
             return self.formata_resultado(str(conta))
 
