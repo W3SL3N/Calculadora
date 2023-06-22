@@ -79,7 +79,8 @@ class Calculos:
         """
         Retorna a porcentagem do número recebido como parâmetro para a realização do cálculo escolhido.
         """
-        numero = self.converte_virgula_para_ponto(numero)
+        if ',' in numero:
+            numero = self.converte_virgula_para_ponto(numero)
         conta = float(numero) / 100
         numero = str((conta * float(self.numero1.replace(self.numero1[-1], ''))))
         return self.formata_resultado(numero)
@@ -95,7 +96,8 @@ class Calculos:
             self.converte_ponto_para_virgula()
             return self.resultado
         else:
-            numero = self.converte_virgula_para_ponto(numero)
+            if ',' in numero:
+                numero = self.converte_virgula_para_ponto(numero)
             conta = float(numero) ** 0.5
             return self.formata_resultado(str(conta))
 

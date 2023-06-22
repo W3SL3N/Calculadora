@@ -29,7 +29,6 @@ class Root(Calculos):
         """
         Definição da janela
         """
-
         largura, altura = 304, 433
 
         ws = self.root.winfo_screenwidth()
@@ -39,11 +38,10 @@ class Root(Calculos):
         y = (hs / 2) - (altura / 2)
 
         self.root.geometry('%dx%d+%d+%d' % (largura, altura, x, y))
-        self.root.title('Calculadora')
         self.root.iconbitmap("icon\icone.ico")
-
-        self.root.configure(background='#202020')
+        self.root.title('Calculadora')
         self.root.resizable(False, False)
+        self.root.configure(background='#202020')
 
         # Faz a topbar seguir o tema de cores do windows.
         set_window_attribute = windll.dwmapi.DwmSetWindowAttribute
@@ -58,7 +56,6 @@ class Root(Calculos):
         """
         Divide a janela em containers
         """
-
         # Frame reservado para a operação em andamento
         self.frame_operacoes = Frame(self.root, bg='#202020', padx=6)
         self.frame_operacoes.place(width=304, height=50)
@@ -75,7 +72,6 @@ class Root(Calculos):
         """
         Engloba criação, configuração e posicionamento da label, entry e buttons
         """
-
         # Label: Criação, Configuração, Fonte
         self.label_operacao = Label(self.frame_operacoes)
         fonte_label = font.Font(family='Arial Unicode MS', size=11, weight='bold')
@@ -89,7 +85,7 @@ class Root(Calculos):
         self.entry_numeros.config(background='#1d1d1d', fg='white', bd=0, justify=RIGHT, font=self.fonte_entry)
         self.entry_numeros.config(insertbackground='#1d1d1d')
         self.entry_numeros.place(relwidth=1, relheight=1)
-        self.entry_numeros.insert(0, '0')
+        self.set_valor_entrada('0')
 
         # números: Criação
         bt7 = Button(self.frame_botoes)
@@ -287,22 +283,21 @@ class Root(Calculos):
             self.entry_numeros.delete(len(self.entry_numeros.get()) - 1)
             self.altera_fonte()
             if len(self.entry_numeros.get()) == 0 and len(self.numero1) < 1:
-                self.entry_numeros.insert(0, '0')
+                self.set_valor_entrada('0')
 
             if len(self.numero1) < 1:
                 if self.entry_numeros.get() == '-':
-                    self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                    self.entry_numeros.insert(0, '0')
+                    self.deleta_c()
                 elif self.entry_numeros.get() == '-0,':
                     self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                    self.entry_numeros.insert(0, '0,')
+                    self.set_valor_entrada('0,')
 
             elif len(self.numero1) > 0:
                 if self.entry_numeros.get() == '-':
                     self.entry_numeros.delete(0, len(self.entry_numeros.get()))
                 elif self.entry_numeros.get() == '-0,':
                     self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                    self.entry_numeros.insert(0, '0,')
+                    self.set_valor_entrada('0,')
 
     def deleta_c(self):
         """
@@ -313,8 +308,7 @@ class Root(Calculos):
         self.numero1 = ''
         self.numero2 = ''
         self.resultado = ''
-        self.entry_numeros.insert(0, '0')
-        self.altera_fonte()
+        self.set_valor_entrada('0')
 
     def deleta_ce(self):
         """
@@ -327,8 +321,7 @@ class Root(Calculos):
                 self.entry_numeros.delete(0, len(self.entry_numeros.get()))
             if len(self.numero1) < 1:
                 self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                self.entry_numeros.insert(0, '0')
-            self.altera_fonte()
+                self.set_valor_entrada('0')
 
     def set_negativo(self):
         """
