@@ -1,10 +1,10 @@
 from tkinter import Tk, Frame, Entry, Label, PhotoImage, Button, font, RIGHT
 from ctypes import windll, c_int, byref, sizeof
 from math import pi
-from app.calculos import *
+from app.calculador import *
 
 
-class Root(Calculos):
+class Root(Calculador):
     def __init__(self):
         super().__init__()
         self.root = Tk()

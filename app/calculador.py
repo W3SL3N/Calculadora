@@ -1,4 +1,4 @@
-class Calculos:
+class Calculador:
     def __init__(self, numero1='', numero2='', operador='', resultado=''):
         self.numero1 = numero1
         self.numero2 = numero2
@@ -9,35 +9,37 @@ class Calculos:
         """
         Recebe o decimal com vírgula e o converte para decimal com ponto.
         """
-        if ',' in self.numero1:
-            self.numero1 = self.numero1.replace(',', '.')
-        if ',' in self.numero2:
-            self.numero2 = self.numero2.replace(',', '.')
-        if ',' in self.resultado:
-            self.resultado = self.resultado.replace(',', '.')
-        try:
+        if numero is None:
+            if ',' in self.numero1:
+                self.numero1 = self.numero1.replace(',', '.')
+            if ',' in self.numero2:
+                self.numero2 = self.numero2.replace(',', '.')
+            if ',' in self.resultado:
+                self.resultado = self.resultado.replace(',', '.')
+        else:
             if ',' in numero:
                 numero = numero.replace(',', '.')
                 return numero
-        except TypeError:
-            pass
+            else:
+                return numero
 
     def converte_ponto_para_virgula(self, numero=None):
         """
         Recebe a resposta decimal com ponto e a converte para decimal com vírgula.
         """
-        if '.' in self.numero1:
-            self.numero1 = self.numero1.replace('.', ',')
-        if '.' in self.numero2:
-            self.numero2 = self.numero2.replace('.', ',')
-        if '.' in self.resultado:
-            self.resultado = self.resultado.replace('.', ',')
-        try:
-            if ',' in numero:
-                numero = numero.replace(',', '.')
+        if numero is None:
+            if '.' in self.numero1:
+                self.numero1 = self.numero1.replace('.', ',')
+            if '.' in self.numero2:
+                self.numero2 = self.numero2.replace('.', ',')
+            if '.' in self.resultado:
+                self.resultado = self.resultado.replace('.', ',')
+        else:
+            if '.' in numero:
+                numero = numero.replace('.', ',')
                 return numero
-        except TypeError:
-            pass
+            else:
+                return numero
 
     def faz_conta(self):
         """
@@ -70,18 +72,18 @@ class Calculos:
             self.converte_ponto_para_virgula()
             return potencia
         else:
-            if ',' in numero:
-                numero = self.converte_ponto_para_virgula(numero)
+            numero = self.converte_virgula_para_ponto(numero)
             potencia = eval(f'{numero}**2')
             self.resultado = self.formata_resultado(potencia)
+            self.converte_ponto_para_virgula()
             return self.resultado
 
     def faz_op_porcentagem(self, numero):
         """
         Retorna a porcentagem do número recebido como parâmetro para a realização do cálculo escolhido.
         """
-        if ',' in numero:
-            numero = self.converte_virgula_para_ponto(numero)
+        numero = self.converte_virgula_para_ponto(numero)
+        self.converte_virgula_para_ponto()
         conta = float(numero) / 100
         numero = str((conta * float(self.numero1.replace(self.numero1[-1], ''))))
         return self.formata_resultado(numero)
@@ -97,10 +99,12 @@ class Calculos:
             self.converte_ponto_para_virgula()
             return self.resultado
         else:
-            if ',' in numero:
-                numero = self.converte_virgula_para_ponto(numero)
+            numero = self.converte_virgula_para_ponto(numero)
             conta = float(numero) ** 0.5
-            return self.formata_resultado(str(conta))
+            conta = self.formata_resultado(conta)
+            conta = self.converte_ponto_para_virgula(numero=conta)
+            self.converte_ponto_para_virgula()
+            return conta
 
     def formata_resultado(self, resultado):
         """
