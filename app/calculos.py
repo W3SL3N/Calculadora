@@ -70,7 +70,8 @@ class Calculos:
             self.converte_ponto_para_virgula()
             return potencia
         else:
-            numero = self.converte_ponto_para_virgula(numero)
+            if ',' in numero:
+                numero = self.converte_ponto_para_virgula(numero)
             potencia = eval(f'{numero}**2')
             self.resultado = self.formata_resultado(potencia)
             return self.resultado
