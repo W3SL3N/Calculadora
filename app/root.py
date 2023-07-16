@@ -328,66 +328,66 @@ class Root(Calculador):
         Insere e remove o símbolo de negação dos números da entry.
         Executa verificações diversas para evitar erros.
         """
-        self.verifica_entry(False)
-
-        if 'e' in self.entry_numeros.get():
-            if '-' in self.entry_numeros.get()[0]:
-                self.label_operacao.config(text='')
-                self.entry_numeros.delete(0, 1)
-                self.numero1 = ''
-                self.numero2 = ''
-            elif '-' not in self.entry_numeros.get()[0]:
-                self.label_operacao.config(text='')
-                self.entry_numeros.insert(0, '-')
-                self.numero1 = ''
-                self.numero2 = ''
-
-        elif ',' in self.entry_numeros.get():
-            testa = sum([int(self.entry_numeros.get().replace(',', ''))])
-            if testa > 0:
-                if len(self.resultado) > 0:
+        if (len(self.entry_numeros.get()) > 0 and not self.entry_numeros.get()[0].isalpha()):
+            self.verifica_entry(False)
+            if 'e' in self.entry_numeros.get():
+                if '-' in self.entry_numeros.get()[0]:
                     self.label_operacao.config(text='')
+                    self.entry_numeros.delete(0, 1)
+                    self.numero1 = ''
+                    self.numero2 = ''
+                elif '-' not in self.entry_numeros.get()[0]:
+                    self.label_operacao.config(text='')
+                    self.entry_numeros.insert(0, '-')
+                    self.numero1 = ''
+                    self.numero2 = ''
+
+            elif ',' in self.entry_numeros.get():
+                testa = sum([int(self.entry_numeros.get().replace(',', ''))])
+                if testa > 0:
+                    if len(self.resultado) > 0:
+                        self.label_operacao.config(text='')
+                        self.numero1 = ''
+                        self.numero2 = ''
+                        self.resultado = ''
+                        self.altera_fonte()
+                    self.entry_numeros.insert(0, '-')
+                elif '-' in self.entry_numeros.get():
+                    if len(self.resultado) > 0:
+                        self.label_operacao.config(text='')
+                        self.numero1 = ''
+                        self.numero2 = ''
+                        self.resultado = ''
+                        self.altera_fonte()
+                    self.entry_numeros.delete(0, 1)
+
+            elif len(self.resultado) > 0 \
+                    and self.define_tamanho_max(self.entry_numeros.get()) \
+                    and self.entry_numeros.get() != "":
+                if '-' in self.entry_numeros.get():
+                    self.label_operacao.config(text='')
+                    self.entry_numeros.delete(0, 1)
                     self.numero1 = ''
                     self.numero2 = ''
                     self.resultado = ''
-                    self.altera_fonte()
-                self.entry_numeros.insert(0, '-')
-            elif '-' in self.entry_numeros.get():
-                if len(self.resultado) > 0:
+                elif '-' not in self.entry_numeros.get() and self.entry_numeros.get() != '0':
                     self.label_operacao.config(text='')
+                    self.entry_numeros.insert(0, '-')
                     self.numero1 = ''
                     self.numero2 = ''
                     self.resultado = ''
-                    self.altera_fonte()
-                self.entry_numeros.delete(0, 1)
 
-        elif len(self.resultado) > 0 \
-                and self.define_tamanho_max(self.entry_numeros.get()) \
-                and self.entry_numeros.get() != "":
-            if '-' in self.entry_numeros.get():
-                self.label_operacao.config(text='')
-                self.entry_numeros.delete(0, 1)
-                self.numero1 = ''
-                self.numero2 = ''
-                self.resultado = ''
-            elif '-' not in self.entry_numeros.get() and self.entry_numeros.get() != '0':
-                self.label_operacao.config(text='')
+            elif len(self.resultado) < 1 \
+                    and (self.entry_numeros.get() != '0'
+                         and len(self.entry_numeros.get()) > 0) \
+                    and self.define_tamanho_max(self.entry_numeros.get()) \
+                    and '-' not in self.entry_numeros.get()[0] \
+                    and self.entry_numeros.get != "":
                 self.entry_numeros.insert(0, '-')
-                self.numero1 = ''
-                self.numero2 = ''
-                self.resultado = ''
 
-        elif len(self.resultado) < 1 \
-                and (self.entry_numeros.get() != '0'
-                     and len(self.entry_numeros.get()) > 0) \
-                and self.define_tamanho_max(self.entry_numeros.get()) \
-                and '-' not in self.entry_numeros.get()[0] \
-                and self.entry_numeros.get != "":
-            self.entry_numeros.insert(0, '-')
-
-        elif len(self.resultado) < 1 \
-                and '-' in self.entry_numeros.get():
-            self.entry_numeros.delete(0, 1)
+            elif len(self.resultado) < 1 \
+                    and '-' in self.entry_numeros.get():
+                self.entry_numeros.delete(0, 1)
 
         self.altera_fonte()
 
@@ -404,12 +404,12 @@ class Root(Calculador):
                     self.numero2 = self.entry_numeros.get()
                 if len(self.resultado) > 0 and len(self.numero2) != 0:
                     self.numero1 = f'{self.resultado}{self.operador}'
-                    self.entry_numeros.insert(0, self.faz_conta())
                     self.label_operacao.config(text=f'{self.numero1}{self.numero2}')
+                    self.entry_numeros.insert(0, self.faz_conta())
                 if len(self.numero2) != 0:
                     self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                    self.entry_numeros.insert(0, self.faz_conta())
                     self.label_operacao.config(text=f'{self.numero1}{self.numero2}')
+                    self.entry_numeros.insert(0, self.faz_conta())
                     self.numero1 = ''
         except ZeroDivisionError:
             self.resultado = 'Impos. dividir por 0'
@@ -424,9 +424,10 @@ class Root(Calculador):
         neste caso este método executará a potência no segundo número digitado, após isso seguirá o cálculo
         conforme o operador pré-definido pelo usuário.
         """
-        self.verifica_entry()
+
         try:
-            if len(self.entry_numeros.get()) > 0:
+            if (len(self.entry_numeros.get()) > 0 and not self.entry_numeros.get()[0].isalpha()):
+                self.verifica_entry()
                 if len(self.numero1) == 0:
                     self.label_operacao.config(text=f'{self.entry_numeros.get()}²')
                     self.numero1 = self.entry_numeros.get()
@@ -434,19 +435,18 @@ class Root(Calculador):
                     self.entry_numeros.insert(0, self.faz_op_potencia(self.numero1))
                     self.numero1 = ''
                     self.numero2 = ''
-                    self.altera_fonte()
                 elif len(self.numero1) > 0:
                     self.numero2 = self.faz_op_potencia(self.entry_numeros.get())
                     self.label_operacao.config(text=f'{self.numero1}{self.numero2}')
                     self.entry_numeros.delete(0, len(self.entry_numeros.get()))
                     self.entry_numeros.insert(0, self.faz_conta())
                     self.numero1 = ''
-                    self.altera_fonte()
         except OverflowError:
             self.resultado = 'Estouro'
             self.numero1 = ''
             self.entry_numeros.delete(0, len(self.entry_numeros.get()))
             self.entry_numeros.insert(0, self.resultado)
+        self.altera_fonte()
 
     def faz_raiz(self):
         """
@@ -455,43 +455,46 @@ class Root(Calculador):
         neste caso este método executará a raiz do segundo número digitado, após isso seguirá o cálculo de acordo
         com o operador pré-definido pelo usuário.
         """
-        self.verifica_entry()
-        if '-' in self.entry_numeros.get():
+        try:
+            if (len(self.entry_numeros.get()) > 0 and not self.entry_numeros.get()[0].isalpha()):
+                self.verifica_entry()
+                if self.entry_numeros.get() != '0':
+                    if len(self.numero1) == 0:
+                        self.numero1 = self.entry_numeros.get()
+                        self.label_operacao.config(text=f'√{self.entry_numeros.get()}')
+                        self.entry_numeros.delete(0, len(self.entry_numeros.get()))
+                        self.entry_numeros.insert(0, self.faz_op_raiz())
+                        self.altera_fonte()
+                        self.numero1 = ''
+                        self.numero2 = ''
+                    elif len(self.numero1) > 0:
+                        self.numero2 = self.faz_op_raiz(self.entry_numeros.get())
+                        self.label_operacao.config(text=f'{self.numero1}{self.numero2}')
+                        self.entry_numeros.delete(0, len(self.entry_numeros.get()))
+                        self.entry_numeros.insert(0, self.faz_conta())
+                        self.altera_fonte()
+                        self.numero1 = ''
+        except ValueError:
             self.resultado = 'Use um número real'
-            self.label_operacao.config(text='')
+            self.numero1 = ''
             self.entry_numeros.delete(0, len(self.entry_numeros.get()))
             self.entry_numeros.insert(0, self.resultado)
             self.altera_fonte()
-        elif self.entry_numeros.get() != '0' and len(self.entry_numeros.get()) > 0:
-            if len(self.numero1) == 0:
-                self.numero1 = self.entry_numeros.get()
-                self.label_operacao.config(text=f'√{self.entry_numeros.get()}')
-                self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                self.entry_numeros.insert(0, self.faz_op_raiz())
-                self.altera_fonte()
-                self.numero1 = ''
-                self.numero2 = ''
-            elif len(self.numero1) > 0:
-                self.numero2 = self.faz_op_raiz(self.entry_numeros.get())
-                self.label_operacao.config(text=f'{self.numero1}{self.numero2}')
-                self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                self.entry_numeros.insert(0, self.faz_conta())
-                self.altera_fonte()
-                self.numero1 = ''
 
     def faz_porcentagem(self):
         """
         Executa calculos de porcentagem do primeiro número pré-definido pelo usuário.
         Só funcionará quando um segundo número for digitado.
         """
-        self.verifica_entry()
-        if len(self.numero1) > 0 and len(self.entry_numeros.get()) > 0:
-            self.numero2 = self.faz_op_porcentagem(self.entry_numeros.get())
-            self.label_operacao.config(text=f'{self.numero1.replace(".", ",")}{self.numero2.replace(".", ",")}')
-            self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-            self.entry_numeros.insert(0, self.faz_conta())
-            self.numero1 = ''
-            self.altera_fonte()
+        if (len(self.entry_numeros.get()) > 0 and not self.entry_numeros.get()[0].isalpha()):
+            self.verifica_entry()
+            if len(self.numero1) > 0:
+                self.numero2 = self.faz_op_porcentagem(self.entry_numeros.get())
+                self.label_operacao.config(text=f'{self.numero1.replace(".", ",")}{self.numero2.replace(".", ",")}')
+                self.entry_numeros.delete(0, len(self.entry_numeros.get()))
+                self.entry_numeros.insert(0, self.faz_conta())
+                self.numero1 = ''
+                self.altera_fonte()
 
     def set_operadores(self, operador):
         """
@@ -501,33 +504,37 @@ class Root(Calculador):
         Cálculo automático sem a necessidade de apertar o botão de igualdade caso um segundo número
         ja tenha sido digitado antes de o próximo operador ser escolhido.
         """
-        self.verifica_entry()
         self.operador = operador
+
         try:
-            if len(self.numero1) == 0:
-                self.label_operacao.config(text=f'{self.entry_numeros.get()}{operador}')
-                self.numero1 = f'{self.entry_numeros.get()}{operador}'
-                self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                self.numero2 = ''
-            elif len(self.numero1) > 0:
-                if len(self.entry_numeros.get()) > 0 and len(self.resultado) < 1:
-                    self.numero2 = self.entry_numeros.get()
-                    conta = self.faz_conta()
-                    self.numero1 = f'{conta}{operador}'
+            if (len(self.entry_numeros.get()) > 0 and not self.entry_numeros.get()[0].isalpha())\
+                    or len(self.entry_numeros.get()) < 1:
+                self.verifica_entry()
+                if len(self.numero1) == 0:
+                    self.label_operacao.config(text=f'{self.entry_numeros.get()}{operador}')
+                    self.numero1 = f'{self.entry_numeros.get()}{operador}'
                     self.entry_numeros.delete(0, len(self.entry_numeros.get()))
-                    self.label_operacao.config(text=self.numero1)
-                    self.entry_numeros.insert(0, self.resultado)
                     self.numero2 = ''
-                elif len(self.entry_numeros.get()) > 0:
-                    self.numero1 = self.numero1.removesuffix(self.numero1[-1])
-                    self.numero1 = f'{self.numero1}{operador}'
-                    self.label_operacao.config(text=self.numero1)
-                elif len(self.entry_numeros.get()) < 1:
-                    self.numero1 = self.numero1.removesuffix(self.numero1[-1])
-                    self.numero1 = f'{self.numero1}{operador}'
-                    self.label_operacao.config(text=self.numero1)
+                elif len(self.numero1) > 0:
+                    if len(self.entry_numeros.get()) > 0 and len(self.resultado) < 1:
+                        self.numero2 = self.entry_numeros.get()
+                        conta = self.faz_conta()
+                        self.numero1 = f'{conta}{operador}'
+                        self.entry_numeros.delete(0, len(self.entry_numeros.get()))
+                        self.label_operacao.config(text=self.numero1)
+                        self.entry_numeros.insert(0, self.resultado)
+                        self.numero2 = ''
+                    elif len(self.entry_numeros.get()) > 0:
+                        self.numero1 = self.numero1.removesuffix(self.numero1[-1])
+                        self.numero1 = f'{self.numero1}{operador}'
+                        self.label_operacao.config(text=self.numero1)
+                    elif len(self.entry_numeros.get()) < 1:
+                        self.numero1 = self.numero1.removesuffix(self.numero1[-1])
+                        self.numero1 = f'{self.numero1}{operador}'
+                        self.label_operacao.config(text=self.numero1)
         except ZeroDivisionError:
             self.resultado = 'Impos. dividir por 0'
+            self.numero1 = ''
             self.entry_numeros.delete(0, len(self.entry_numeros.get()))
             self.entry_numeros.insert(0, self.resultado)
         self.altera_fonte()
@@ -539,7 +546,6 @@ class Root(Calculador):
         Limpar a entry e a label se algum há um resultado anterior armazenado;
         Substituir todos os valores inseridos na entry pelo número pi.
         """
-
         qtd_numeros = len(self.entry_numeros.get())
 
         if valor == str(pi).replace('.', ','):
@@ -550,15 +556,16 @@ class Root(Calculador):
             self.entry_numeros.insert(qtd_numeros, valor)
             self.altera_fonte()
 
-        elif valor == ',' or self.entry_numeros.get() != '0' and self.define_tamanho_max(self.entry_numeros.get()):
-            if len(self.resultado) > 0:
-                if len(self.numero2) < 1:
-                    self.entry_numeros.delete(0, qtd_numeros)
-                    self.label_operacao.config(text=self.numero1)
-                    self.resultado = ''
-                elif len(self.numero2) > 0:
-                    self.deleta_c()
-                    self.entry_numeros.delete(0, qtd_numeros)
+        elif valor == ',' or self.entry_numeros.get() != '0':
+            if (self.define_tamanho_max(self.entry_numeros.get()) or self.entry_numeros.get()[0].isalpha()):
+                if len(self.resultado) > 0:
+                    if len(self.numero2) < 1:
+                        self.entry_numeros.delete(0, qtd_numeros)
+                        self.label_operacao.config(text=self.numero1)
+                        self.resultado = ''
+                    elif len(self.numero2) > 0:
+                        self.deleta_c()
+                        self.entry_numeros.delete(0, qtd_numeros)
             self.entry_numeros.insert(qtd_numeros, valor)
             self.altera_fonte()
 
