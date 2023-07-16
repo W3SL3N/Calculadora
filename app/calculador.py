@@ -1,3 +1,6 @@
+import math
+
+
 class Calculador:
     def __init__(self, numero1='', numero2='', operador='', resultado=''):
         self.numero1 = numero1
@@ -48,12 +51,12 @@ class Calculador:
         """
         self.converte_virgula_para_ponto()
         if '×' in self.numero1:
-            conta = eval(f'{self.numero1.replace("×", "*")}{self.numero2}')
+            conta = float(self.numero1.replace("×", "")) * float(self.numero2)
             self.resultado = self.formata_resultado(conta)
             self.converte_ponto_para_virgula()
             return self.resultado
         if '÷' in self.numero1:
-            conta = eval(f'{self.numero1.replace("÷", "/")}{self.numero2}')
+            conta = float(self.numero1.replace("÷", "")) / float(self.numero2)
             self.resultado = self.formata_resultado(conta)
             self.converte_ponto_para_virgula()
             return self.resultado
@@ -68,12 +71,12 @@ class Calculador:
         Retorna a potência quadrada do número pedido.
         """
         if numero is None:
-            potencia = eval(f'{self.numero2}**2')
+            potencia = math.pow(float(self.numero1), 2.0)
             self.converte_ponto_para_virgula()
             return potencia
         else:
             numero = self.converte_virgula_para_ponto(numero)
-            potencia = eval(f'{numero}**2')
+            potencia = math.pow(float(numero), 2.0)
             self.resultado = self.formata_resultado(potencia)
             self.converte_ponto_para_virgula()
             return self.resultado
@@ -85,7 +88,7 @@ class Calculador:
         numero = self.converte_virgula_para_ponto(numero)
         self.converte_virgula_para_ponto()
         conta = float(numero) / 100
-        numero = str((conta * float(self.numero1.replace(self.numero1[-1], ''))))
+        numero = conta * float(self.numero1.replace(self.numero1[-1], ''))
         return self.formata_resultado(numero)
 
     def faz_op_raiz(self, numero=None):
@@ -94,13 +97,13 @@ class Calculador:
         """
         self.converte_virgula_para_ponto()
         if numero is None:
-            conta = float(self.numero1) ** 0.5
+            conta = math.sqrt(float(self.numero1))
             self.resultado = self.formata_resultado(conta)
             self.converte_ponto_para_virgula()
             return self.resultado
         else:
             numero = self.converte_virgula_para_ponto(numero)
-            conta = float(numero) ** 0.5
+            conta = math.sqrt(float(numero))
             conta = self.formata_resultado(conta)
             conta = self.converte_ponto_para_virgula(numero=conta)
             self.converte_ponto_para_virgula()
