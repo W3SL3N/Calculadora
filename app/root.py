@@ -551,12 +551,12 @@ class Root(Calculador):
         if valor == str(pi).replace('.', ','):
             self.entry_numeros.delete(0, qtd_numeros)
 
-        if self.entry_numeros.get() == '0' and valor != ',':
+        if self.entry_numeros.get() == '0' and valor != ',' and self.resultado != '0':
             self.entry_numeros.delete(0, qtd_numeros)
             self.entry_numeros.insert(qtd_numeros, valor)
             self.altera_fonte()
 
-        elif valor == ',' or self.entry_numeros.get() != '0':
+        elif valor == ',' or self.entry_numeros.get() != '0' or self.resultado == '0':
             if (self.define_tamanho_max(self.entry_numeros.get()) or self.entry_numeros.get()[0].isalpha()):
                 if len(self.resultado) > 0:
                     if len(self.numero2) < 1:
@@ -566,8 +566,8 @@ class Root(Calculador):
                     elif len(self.numero2) > 0:
                         self.deleta_c()
                         self.entry_numeros.delete(0, qtd_numeros)
-            self.entry_numeros.insert(qtd_numeros, valor)
-            self.altera_fonte()
+                self.entry_numeros.insert(qtd_numeros, valor)
+                self.altera_fonte()
 
     def add_ponto_flutuante(self):
         """
